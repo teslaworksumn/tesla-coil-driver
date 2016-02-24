@@ -7,7 +7,7 @@ from teslamidi import TeslaCoilMidi
 from midi_song import MidiSong as MS
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input", nargs="?" help="set the input MIDI port")
+parser.add_argument("-i", "--input", nargs="?", help="set the input MIDI port")
 parser.add_argument("-o", "--output", help="set the output MIDI port")
 args = parser.parse_args()
 
