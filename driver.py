@@ -26,9 +26,8 @@ if sys.flags.interactive:
     print("Type `help()` to list commands.")
     print(" Type `help(command)` for help on a specific command")
 else:
-    print("Type `help()` to list commands.")
-    print(" Type `help(command)` for help on a specific command")
-    code.interact(local=dict(globals(), **locals()))
+    print("This program currently does not support running in script mode")
+    sys.exit(1)
 
 def help(command):
     if command is None:
