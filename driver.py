@@ -33,8 +33,8 @@ else:
     tcm.set_output(args.output)
 
 if sys.flags.interactive:
-    print("Type `help()` to list commands.")
-    print(" Type `help(command)` for help on a specific command")
+    print("Type `coilhelp()` to list commands.")
+    print(" Type `coilhelp(command)` for help on a specific command")
 else:
     print("This program currently does not support running in script mode")
     sys.exit(1)
@@ -44,12 +44,13 @@ def coilhelp(command=None):
         if command is None:
             print("Available commands:")
             print("  passthrough()      Passes the input midi directly to the output")
+            print("If you get an error like \"NameError: Name 'command' is not defined\", that is not a valid command here")
         elif command is passthrough or command == "passthrough":
             print("passthrough()")
             print("  Passes the input midi directly to the output, effectively creating a software pipe between them")
             print("  This is useful for attaching a keyboard to the comptuer; allowing the computer to interrput the signal.")
         else:
-            print("Command not recognized")
+            print("Command not recognized, or I don't have any info on that command")
     except NameError:
         print("Command not recognized")
 def passthrough():
