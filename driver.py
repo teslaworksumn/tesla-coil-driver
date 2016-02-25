@@ -21,6 +21,7 @@ if args.list:
     sys.stdout.write("Available outputs:\n")
     for i in mido.get_input_names():
         sys.stdout.write(" {0}\n".format(i))
+    sys.exit(1)
 
 tcm = TeslaCoilMidi()
 

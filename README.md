@@ -22,4 +22,5 @@ The inputs and outputs will begin with a space, if you want to parse this list.
 
 `start_unix.sh` is a wrapper script for `driver.py` that initializes shell 
 variables on some systems and sets some arguments automatically.  If it is 
-called without arguments, it will assume the input "" and the output ""
+called without arguments, it will assume the input "USB2.0-MIDI MIDI 1" and 
+the output "USB2.0-MIDI MIDI 1"
