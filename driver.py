@@ -39,15 +39,19 @@ else:
     print("This program currently does not support running in script mode")
     sys.exit(1)
 
-def help(command):
-    if command is None:
-        print("Available commands:")
-        print("  passthrough()      Passes the input midi directly to the output")
-    elif command is passthrough:
-        print("passthrough()")
-        print("  Passes the input midi directly to the output, effectively creating a software pipe between them")
-        print("  This is useful for attaching a keyboard to the comptuer; allowing the computer to interrput the signal.")
-
+def coilhelp(command=None):
+    try:
+        if command is None:
+            print("Available commands:")
+            print("  passthrough()      Passes the input midi directly to the output")
+        elif command is passthrough or command == "passthrough":
+            print("passthrough()")
+            print("  Passes the input midi directly to the output, effectively creating a software pipe between them")
+            print("  This is useful for attaching a keyboard to the comptuer; allowing the computer to interrput the signal.")
+        else:
+            print("Command not recognized")
+    except NameError:
+        print("Command not recognized")
 def passthrough():
     tcm.passthrough()
 
