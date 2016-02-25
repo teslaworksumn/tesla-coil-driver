@@ -9,9 +9,18 @@ from teslamidi import TeslaCoilMidi
 from midi_song import MidiSong as MS
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input", nargs="?", help="set the input MIDI port")
+parser.add_argument("-i", "--input", help="set the input MIDI port")
 parser.add_argument("-o", "--output", help="set the output MIDI port")
+parser.add_argument("-l", "--list", help="list the available MIDI ports", action='store_true')
 args = parser.parse_args()
+
+if args.list:
+    sys.stdout.write("Available inputs:\n")
+    for i in mido.get_input_names():
+        sys.stdout.write(" {0}\n".format(i))
+    sys.stdout.write("Available outputs:\n")
+    for i in mido.get_input_names():
+        sys.stdout.write(" {0}\n".format(i))
 
 tcm = TeslaCoilMidi()
 
