@@ -20,7 +20,9 @@ class MidiSong:
         else:
             self.break_flag = False
             self.paused = False
-            self.thread = threading.Thread(target=self.thread)
+            self.thread = threading.Thread(target=self.runnable)
+            self.thread.setName("MIDI file {0}".format(self.filename))
+            self.thread.start()
     def pause(self):
         self.paused = not self.paused
         self.output.reset()
@@ -28,7 +30,11 @@ class MidiSong:
         self.break_flag = True
         self.paused = False
         self.thread.join()
-    def thread():
+        self.output.reset()
+    def close(self):
+        self.stop()
+        self.midifile.close()
+    def runnable(self):
         for message in self.midifile.play():
             self.output.send(message)
             if self.break_flag:
