@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--input", help="set the input MIDI port")
 parser.add_argument("-o", "--output", help="set the output MIDI port")
 parser.add_argument("-l", "--list", help="list the available MIDI ports", action='store_true')
+parser.add_argument("-s", "--songs", help="set the list of songs to use (see README)")
 args = parser.parse_args()
 
 if args.list:
@@ -34,8 +35,12 @@ else:
     tcm.set_input(args.input)
     tcm.set_output(args.output)
 
-songfilename = "./songs.json"
+if args.songs is None:
+    songfilename = "./songs.json"
+else:
+    songfilename = args.songs
 pl = Pl(songfilename, tcm.outport)
+current_song = None
 
 if sys.flags.interactive:
     print("Type `coilhelp()` to list commands.")
@@ -48,17 +53,28 @@ def coilhelp(command=None):
     try:
         if command is None:
             print("Available commands:")
-            print("  passthrough()      Passes the input midi directly to the output")
-            print("  list_songs()       Lists the files that have been automatically loaded")
-            print("  reload_songs()     Reloads the files containing the list of songs")
-            print("  play(song_name)    Plays the preloaded song indicated by string song_name")
-            print("  pause()            Pauses the currently playing song. If a song is already paused, it will resume playback")
-            print("  stop()             Stops the currently playing song and resets the position to the beginning")
+            print("  passthrough()           Passes the input midi directly to the output")
+            print("  list_songs()            Lists the files that have been automatically loaded")
+            print("  panic()                 Stops all playing notes abruptly without regard to decay times")
+            print("  reload_songs()          Reloads the files containing the list of songs")
+            print("  play(song_name)         Plays the preloaded song indicated by string song_name")
+            print("  pause()                 Pauses the currently playing song. If a song is already paused, it will resume playback")
+            print("  stop()                  Stops the currently playing song and resets the position to the beginning")
+            print("  find_songs(key, value)  Searches the playlist for the string 'value' in the field 'key', and returns all that contain the match")
             print("If you get an error like \"NameError: Name 'command' is not defined\", that is not a valid command here")
         elif command is passthrough or command == "passthrough":
             print("passthrough()")
             print("  Passes the input midi directly to the output, effectively creating a software pipe between them")
             print("  This is useful for attaching a keyboard to the comptuer; allowing the computer to interrput the signal.")
+        elif command is panic or command == "panic":
+            print("panic()")
+            print("  Stops all playing notes abruptly without regard to decay times")
+            print("  See also reset()")
+        elif command is reset or command == "reset":
+            print("reset()")
+            print("  Sends the \"all notes off\" and \"reset all controllers\" on every channel.")
+            print("  This is often used after a song, but we try to do that for you. If it didn't happen automatically, try this.")
+            print("  See also panic()")
         elif command is list_songs or command == "list_songs":
             print("list_songs()")
             print("  Lists the files that have been automatically loaded.")
@@ -67,6 +83,12 @@ def coilhelp(command=None):
             print("reload_songs()")
             print("  Reloads the songs defined in ./songs.json")
             print("  See README for file format")
+        elif command is find_songs or command == "find_songs":
+            print("find_songs(key, value)")
+            print("  Searches the playlist for the string 'value' in the field 'key', and returns all that contain the match")
+        elif command is whats_playing or command == "whats_playing":
+            print("whats_playing()")
+            print
         elif command is play or command == "play":
             print("play([song_name])")
             print("  Plays the preloaded song indicated by string song_name")
@@ -85,26 +107,38 @@ def coilhelp(command=None):
         print("Command not recognized, or I don't have any info on that command")
 def passthrough():
     tcm.passthrough()
+def panic():
+    tcm.outport.panic()
+def reset():
+    tcm.outport.reset()
 
 def list_songs():
     pl.list()
+def find_songs(key, value):
+    s_l = pl.find_songs(key, value)
+    for s in s_l:
+        print(s)
+        print("{0}:\t\"{1}\" - \"{2}\"".format(s, s_l[s]["title"], s_l[s]["artist"]))
 def reload_songs():
     pl.reload()
-current_song = None
+
 def play(song_name):
-    if current_song is not None:
-        pl.stop(current_song)
+    global current_song
+    if current_song is None:
         current_song = song_name
         pl.play(song_name)
     else:
+        pl.stop(current_song)
         current_song = song_name
         pl.play(song_name)
 def pause():
+    global current_song
     if current_song is None:
         print("No song is playing")
     else:
         pl.pause(current_song)
 def stop():
+    global current_song
     if current_song is None:
         print("No song is playing")
     else:
