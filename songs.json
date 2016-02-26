@@ -1,9 +1,9 @@
 {
-    "songs": [
-        { "sandman": { "title":"Enter the Sandman", "artist":"Metalica", "path":"../tesla-coil-midi/3-note maybe/Metalica - Enter Sandman.mid" } },
-        { "sunshine": { "title":"Sunshine of Your Love", "artist":"Cream", "path":"../tesla-coil-midi/3-note maybe/Cream - Sunshine of Your Love_new.mid" } },
-        { "sweet-home": { "title":"Sweet Home Alabama", "artist":"Lynyrd Skynyrd", "path":"../tesla-coil-midi/2-note maybe/Lynyrd Skynyrd - Sweet Home Alabama_new.mid" } },
-        { "danger": { "title":"Danger Zone", "artist":"Kenny Loggins", "path":"../tesla-coil-midi/2-note/Kenny Loggins - Danger Zone_new.mid" } },
-        { "name": { "title":"", "artist":"", "path":"../tesla-coil-midi/2-note/.mid" } },
-    ]
+    "songs": {
+        "sandman": { "title":"Enter the Sandman", "artist":"Metalica", "path":"../tesla-coil-midi/freddy/3-note might survive/Metalica - Enter Sandman.mid" },
+        "sunshine": { "title":"Sunshine of Your Love", "artist":"Cream", "path":"../tesla-coil-midi/freddy/3-note might survive/Cream - Sunshine of Your Love.mid" },
+        "sweet-home": { "title":"Sweet Home Alabama", "artist":"Lynyrd Skynyrd", "path":"../tesla-coil-midi/freddy/2-note maybe/Lynyrd Skynyrd - Sweet Home Alabama.mid" },
+        "danger": { "title":"Danger Zone", "artist":"Kenny Loggins", "path":"../tesla-coil-midi/freddy/2-note/Kenny Loggins - Danger Zone.mid" }
+        
+    }
 }
