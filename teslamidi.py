@@ -25,7 +25,5 @@ class TeslaCoilMidi:
         self.outport.close()
 
 class TeslaCoilMidiException(Exception):
-    def __init__(self, message):
-
-        # Call the base class constructor with the parameters it needs
-        super(ValidationError, self).__init__(message)
+    def __init__(self,*args,**kwargs):
+        Exception.__init__(self,*args,**kwargs)
