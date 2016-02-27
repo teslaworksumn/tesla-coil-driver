@@ -4,7 +4,9 @@ import atexit
 import code
 import json
 import mido
+import random
 import sys
+import threading
 
 from teslamidi import TeslaCoilMidi
 from midi_song import MidiSong as MS
@@ -41,6 +43,9 @@ else:
     songfilename = args.songs
 pl = Pl(songfilename, tcm.outport)
 current_song = None
+randomizing = False
+#random_thread = threading.Thread(target=random_thread_runnable)
+#random_thread.setName("Random Thread")
 
 if sys.flags.interactive:
     print("Type `coilhelp()` to list commands.")
@@ -113,7 +118,7 @@ def reset():
     tcm.outport.reset()
 
 def list_songs():
-    pl.list()
+    pl.list_songs()
 def find_songs(key, value):
     s_l = pl.find_songs(key, value)
     for s in s_l:
@@ -124,13 +129,13 @@ def reload_songs():
 
 def play(song_name):
     global current_song
-    if current_song is None:
-        current_song = song_name
-        pl.play(song_name)
-    else:
+    if song_name not in pl.list.keys():
+        print("Error:` song not found")
+        return
+    if current_song is not None:
         pl.stop(current_song)
-        current_song = song_name
-        pl.play(song_name)
+    current_song = song_name
+    pl.play(song_name)
 def pause():
     global current_song
     if current_song is None:
@@ -139,13 +144,30 @@ def pause():
         pl.pause(current_song)
 def stop():
     global current_song
+    global randomizing
     if current_song is None:
         print("No song is playing")
     else:
         pl.stop(current_song)
+    if randomizing:
+        randomizing = False
 
+def randomize():
+    global current_song
+    global randomizing
+    if current_song is not None:
+        pl.stop(current_song)
+    randomizing = True
+    random_thread.start()
 
 def allstop():
     if tcm is not None:
         tcm.stop()
 atexit.register(allstop)
+
+class RandomThread():
+    def run():
+        global current_song
+        global randomizing
+        while randomizing:
+            current_song = None
