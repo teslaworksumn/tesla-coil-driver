@@ -59,18 +59,23 @@ def coilhelp(command=None):
         if command is None:
             print("Available commands:")
             print("  passthrough()           Passes the input midi directly to the output")
-            print("  list_songs()            Lists the files that have been automatically loaded")
             print("  panic()                 Stops all playing notes abruptly without regard to decay times")
+            print("  reset()                 Sends the \"all notes off\" and \"reset all controllers\" on every channel.")
+            print("")
+            print("  list_songs()            Lists the files that have been automatically loaded")
             print("  reload_songs()          Reloads the files containing the list of songs")
+            print("  find_songs(key, value)  Searches the playlist for the string 'value' in the field 'key', and returns all that contain the match")
+            print("  whats_playing()         Prints the known info about the currently playing song")
             print("  play(song_name)         Plays the preloaded song indicated by string song_name")
             print("  pause()                 Pauses the currently playing song. If a song is already paused, it will resume playback")
             print("  stop()                  Stops the currently playing song and resets the position to the beginning")
-            print("  find_songs(key, value)  Searches the playlist for the string 'value' in the field 'key', and returns all that contain the match")
+            print("")
             print("If you get an error like \"NameError: Name 'command' is not defined\", that is not a valid command here")
         elif command is passthrough or command == "passthrough":
             print("passthrough()")
             print("  Passes the input midi directly to the output, effectively creating a software pipe between them")
             print("  This is useful for attaching a keyboard to the comptuer; allowing the computer to interrput the signal.")
+            print("  NOTE: This is a blocking command, meaning that you have to press Ctrl+C to exit this mode to send the next command")
         elif command is panic or command == "panic":
             print("panic()")
             print("  Stops all playing notes abruptly without regard to decay times")
@@ -93,7 +98,7 @@ def coilhelp(command=None):
             print("  Searches the playlist for the string 'value' in the field 'key', and returns all that contain the match")
         elif command is whats_playing or command == "whats_playing":
             print("whats_playing()")
-            print
+            print("  Prints the known info about the currently playing song")
         elif command is play or command == "play":
             print("play([song_name])")
             print("  Plays the preloaded song indicated by string song_name")
@@ -119,18 +124,23 @@ def reset():
 
 def list_songs():
     pl.list_songs()
+def reload_songs():
+    pl.reload()
 def find_songs(key, value):
     s_l = pl.find_songs(key, value)
     for s in s_l:
         print(s)
         print("{0}:\t\"{1}\" - \"{2}\"".format(s, s_l[s]["title"], s_l[s]["artist"]))
-def reload_songs():
-    pl.reload()
 
+def whats_playing():
+    if current_song is not None:
+        pl.print_info(current_song)
+    else:
+        print("No song is playing")
 def play(song_name):
     global current_song
     if song_name not in pl.list.keys():
-        print("Error:` song not found")
+        print("Error: song not found")
         return
     if current_song is not None:
         pl.stop(current_song)
@@ -161,8 +171,11 @@ def randomize():
     random_thread.start()
 
 def allstop():
+    if pl is not None:
+        pl.close()
     if tcm is not None:
         tcm.stop()
+    #sys.exit(0)
 atexit.register(allstop)
 
 class RandomThread():

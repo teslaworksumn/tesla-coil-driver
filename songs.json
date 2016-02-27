@@ -45,6 +45,6 @@
         "mario" : {"artist": "", "path": "../tesla-coil-midi/Tesla Coil Music 1.8/MIDI/Themes/Super Mario Bros.mid", "title": "Super Mario Bros"},
         "tetris" : {"artist": "", "path": "../tesla-coil-midi/Tesla Coil Music 1.8/MIDI/Themes/Tetris.mid", "title": "Tetris"},
         "willtell" : {"artist": "", "path": "../tesla-coil-midi/Tesla Coil Music 1.8/MIDI/Themes/William Tell Overture Finale.mid", "title": "William Tell Overture Finale"},
-        "zelda" : {"artist": "", "path": "../tesla-coil-midi/Tesla Coil Music 1.8/MIDI/Themes/Zelda.mid", "title": "Zelda"},
+        "zelda" : {"artist": "", "path": "../tesla-coil-midi/Tesla Coil Music 1.8/MIDI/Themes/Zelda.mid", "title": "Zelda"}
     }
 }

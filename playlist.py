@@ -37,9 +37,11 @@ class Playlist:
         if s is None:
             raise PlaylistException("Song {0} not found".format(name))
         s['player'].wait()
+    def print_info(self, name):
+        print("{0}:\t\"{1}\" - \"{2}\"".format(name, self.list[name]["title"], self.list[name]["artist"]))
     def list_songs(self):
         for s in self.list:
-            print("{0}:\t\"{1}\" - \"{2}\"".format(s, self.list[s]["title"], self.list[s]["artist"]))
+            self.print_info(s)
         return None
     def find_songs(self, key, value):
         s_l = []
@@ -52,7 +54,7 @@ class Playlist:
         return s_l
     def close(self):
         for s in self.list:
-            self.list[s].close()
+            self.list[s]['player'].close()
 
 class PlaylistException(Exception):
     def __init__(self,*args,**kwargs):

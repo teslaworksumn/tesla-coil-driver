@@ -4,6 +4,7 @@ class TeslaCoilMidi:
     def __init__(self):
         self.inport = None
         self.outport = None
+        self.break_flag = False
     def set_input(self, port_name):
         self.inport = mido.open_input(port_name)
     def set_output(self, port_name):
@@ -17,9 +18,12 @@ class TeslaCoilMidi:
                 except KeyboardInterrupt:
                     self.outport.reset()
                     break
+                if self.break_flag:
+                    break;
         else:
             raise TeslaCoilMidiException("An input port is required to use passthrough mode")
     def stop(self):
+        self.break_flag = True
         self.inport.close()
         self.outport.reset()
         self.outport.close()

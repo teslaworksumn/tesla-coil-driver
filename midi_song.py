@@ -39,8 +39,9 @@ class MidiSong:
     def stop(self):
         #print("1: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
         self.stopped.set()
-        self.playing.set()
-        self.thread.join()
+        if self.thread is not None:
+            self.playing.set()
+            self.thread.join()
         self.playing.clear()
         self.output.reset()
         #print("2: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
@@ -48,7 +49,7 @@ class MidiSong:
         self.stopped.wait(timeout)
     def close(self):
         self.stop()
-        self.midifile.close()
+        #this doesn't work for some reason... #self.midifile.close()
     def runnable(self):
         self.stopped.clear()
         self.playing.set()
