@@ -14,7 +14,7 @@ class TeslaCoilMidi:
                 try:
                     m = self.inport.receive()
                     self.outport.send(m)
-                except KeyboardException:
+                except KeyboardInterrupt:
                     self.outport.reset()
                     break
         else:
