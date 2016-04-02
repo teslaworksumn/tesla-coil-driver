@@ -116,6 +116,8 @@ def coilhelp(command=None):
     except NameError:
         print("Command not recognized, or I don't have any info on that command")
 def passthrough():
+	if current_song is not None:
+		pl.stop(current_song)
     tcm.passthrough()
 def panic():
     tcm.outport.panic()

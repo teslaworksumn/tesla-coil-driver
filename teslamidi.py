@@ -11,6 +11,7 @@ class TeslaCoilMidi:
         self.outport = mido.open_output(port_name)
     def passthrough(self):
         if self.inport is not None and self.outport is not None:
+            self.outport.reset()
             while True:
                 try:
                     m = self.inport.receive()
