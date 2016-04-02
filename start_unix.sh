@@ -5,7 +5,7 @@ if [ "$(uname)" == "Darwin" ];then
 fi
 
 if [ -z "$@" ];then
-	export args="-i \"USB2.0-MIDI MIDI 1\" -o \"USB2.0-MIDI MIDI 1\""
+	export args="-i \"Q49 MIDI 1\" -o \"USB2.0-MIDI MIDI 1\""
 else
 	export args="$@"
 fi
