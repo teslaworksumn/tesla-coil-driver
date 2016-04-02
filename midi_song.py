@@ -1,6 +1,7 @@
 import mido
 from mido import MidiFile
 import threading
+import traceback
 
 class MidiSong:
     def __init__(self,filename,output):
@@ -8,20 +9,55 @@ class MidiSong:
         self.output = output
         self.midifile = None
         self.midifile = MidiFile(self.filename)
-        self.break_flag = False
+        self.playing = threading.Event()
+        self.playing.clear()
+        self.stopped = threading.Event()
+        self.stopped.set()
+        self.thread = None
+        self.open()
     def open(self):
+        if self.thread is not None:
+            self.stop()
         self.midifile = MidiFile(self.filename)
-        self.server_thread = threading.Thread(target=self.run)
-        self.server_thread.setName("Midi song: {0}".format(self.filename))
     def play(self):
-        self.break_flag = False
-        self.thread = threading.Thread(target=self.thread)
+        #print("1: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
+        if self.playing.is_set():
+            self.pause()
+        else:
+            if not self.stopped.is_set():
+                self.stop()
+            self.thread = threading.Thread(target=self.runnable)
+            self.thread.setName("MIDI song: {0}".format(self.filename))
+            self.thread.start()
+        #print("2: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
+    def pause(self):
+        if self.playing.is_set():
+            self.playing.clear()
+            self.output.reset()
+        else:
+            self.playing.set()
     def stop(self):
-        self.break_flag = True
-        self.thread.join()
-    def thread():
+        #print("1: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
+        self.stopped.set()
+        if self.thread is not None:
+            self.playing.set()
+            self.thread.join()
+        self.playing.clear()
+        self.output.reset()
+        #print("2: n:{0},p:{1},s:{2}".format(self.filename,self.playing.is_set(), self.stopped.is_set()))
+    def wait(self, timeout=None):
+        self.stopped.wait(timeout)
+    def close(self):
+        self.stop()
+        #this doesn't work for some reason... #self.midifile.close()
+    def runnable(self):
+        self.stopped.clear()
+        self.playing.set()
         for message in self.midifile.play():
+            self.playing.wait()
             self.output.send(message)
-            if self.break_flag:
+            if self.stopped.is_set():
                 break;
         self.output.reset()
+        self.playing.clear()
+        self.stopped.set()
